@@ -242,20 +242,35 @@ void MainWindow::setFontSize()
 
 void MainWindow::setFontColor()
 {
-    QColor color = QColorDialog::getColor(ui->TextEdit->textColor(), this, tr("选择字体颜色"));
-    if (color.isValid()) ui->TextEdit->setTextColor(color);
+    // 获取当前光标处的默认字体颜色，如果没有则默认黑色
+    QColor initialColor = ui->TextEdit->textCursor().charFormat().foreground().color();
+    if (!initialColor.isValid()) {
+        initialColor = Qt::black;
+    }
+
+    QColor color = QColorDialog::getColor(initialColor, this, tr("选择字体颜色"));
+    if (color.isValid()) {
+        // 使用 QTextCharFormat 设置当前选中或即将输入的文本颜色
+        QTextCharFormat fmt;
+        fmt.setForeground(color);
+        ui->TextEdit->mergeCurrentCharFormat(fmt);
+    }
 }
 
 void MainWindow::setFontBgColor()
 {
-    QColor color = QColorDialog::getColor(ui->TextEdit->palette().color(QPalette::Base), this, tr("选择字体背景色"));
+    QColor initialColor = ui->TextEdit->textCursor().charFormat().background().color();
+    if (!initialColor.isValid()) {
+        initialColor = Qt::white;
+    }
+
+    QColor color = QColorDialog::getColor(initialColor, this, tr("选择字体背景色"));
     if (color.isValid()) {
-        QPalette p = ui->TextEdit->palette();
-        p.setColor(QPalette::Highlight, color); // 字体背景色通常指选中背景色
-        ui->TextEdit->setPalette(p);
+        QTextCharFormat fmt;
+        fmt.setBackground(color);
+        ui->TextEdit->mergeCurrentCharFormat(fmt);
     }
 }
-
 void MainWindow::setEditorBgColor()
 {
     QColor color = QColorDialog::getColor(ui->TextEdit->palette().color(QPalette::Base), this, tr("选择编辑器背景色"));

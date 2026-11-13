@@ -13,7 +13,7 @@ signals:
     void findRequested(const QString &text, bool forward, bool caseSensitive);
 private slots:
     void on_btFindNext_clicked();
-    void on_btCancel_clicked();
+    // void on_btCancel_clicked();  <-- 删除或注释掉这一行
 private:
     Ui::searchDialog *ui;
 };

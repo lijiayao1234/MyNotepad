@@ -2,13 +2,16 @@
 #include "ui_searchdialog.h"
 
 searchDialog::searchDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::searchDialog)
+    QDialog(parent), ui(new Ui::searchDialog)
 {
     ui->setupUi(this);
+    ui->rbDown->setChecked(true);
+    connect(ui->btCancel, &QPushButton::clicked, this, &QDialog::close);
 }
 
-searchDialog::~searchDialog()
+searchDialog::~searchDialog() { delete ui; }
+
+void searchDialog::on_btFindNext_clicked()
 {
-    delete ui;
+    emit findRequested(ui->searchText->text(), ui->rbDown->isChecked(), ui->rbCaseSensetive->isChecked());
 }
